@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { HttpException } from '@nestjs/common';
+import { HttpException} from '@nestjs/common';
 
 import { ProductEntity } from 'src/entities/product.entity';
 import { ProductTypeEntity } from 'src/entities/productType.entity';
@@ -36,21 +36,6 @@ export class ProductsService {
             console.log("Terminó la ejecución productType")
         }
     }
-    
-    /*
-    //Copilot sugiere que pedís solo el nombre de parámetro y después creás vos la entidad
-    async createProductType(name: string): Promise<ProductTypeEntity> {
-        try {
-            const newProductType = new ProductTypeEntity();
-            newProductType.name = name;
-            return await this.repositoryProductTypeEntity.save(newProductType);
-        } catch {
-            throw new HttpException("Solicitud incorrecta - Error creando producto", 400)
-        } finally {
-            console.log("Terminó la ejecución productType")
-        }
-    }
-    */
 
     //Función para el GET, findall
     async findAll(){
@@ -59,7 +44,5 @@ export class ProductsService {
         } catch (error) {
           throw new HttpException('Error finding products', 500);
         }
-      }
-    
-        
+    }
 }
