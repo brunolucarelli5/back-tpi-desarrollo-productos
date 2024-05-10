@@ -12,7 +12,7 @@ import { entities } from './entities';
     type: 'sqlite',
     database: 'ProductsRepository.db',
     entities: entities,
-    synchronize: true, //busca cambios en la DB cada que prendamos la app
+    synchronize: false, //busca cambios en la DB cada que prendamos la app
   })],
   controllers: [AppController],
   providers: [AppService],
