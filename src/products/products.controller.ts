@@ -58,4 +58,9 @@ export class ProductsController {
     async deleteProductType(@Param('id') id: string): Promise<void> {
         return await this.productsService.deleteProductType(id);
     }
+
+    @Get("/getProducts")
+    async findAll() {
+        return await this.productsService.findAll();
+    }
 }
