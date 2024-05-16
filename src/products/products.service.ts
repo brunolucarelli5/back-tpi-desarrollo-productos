@@ -66,11 +66,12 @@ export class ProductsService {
         await this.productTypeRepository.delete(id);
     }
 
+
     async findAll(){
         try {
           return await this.productTypeRepository.find(); // Devuelve todos los productos
         } catch (error) {
-          throw new HttpException('Error finding products', 500);
+          throw new HttpException(error.message??'Error finding products', 500);
         }
     }
 }
