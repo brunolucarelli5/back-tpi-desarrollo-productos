@@ -1,14 +1,14 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { ProductEntity } from "./product.entity";
-import { BaseEntity } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { ProductEntity } from './../entities/product.entity';
 
-@Entity("products") //Products es el nombre de la tabla
-export class ProductTypeEntity extends BaseEntity {
+@Entity()
+export class ProductTypeEntity {
     @PrimaryGeneratedColumn()
-    id: number;
+    id: string;
+
     @Column()
     name: string;
 
-    @OneToMany( () => ProductEntity, (product) => product.productType)
+    @OneToMany(() => ProductEntity, product => product.productType)
     products: ProductEntity[];
 }

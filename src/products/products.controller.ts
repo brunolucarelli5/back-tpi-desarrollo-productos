@@ -1,35 +1,61 @@
-import { Controller, Get, Post, Put, Patch, Delete, Body } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
 import { ProductsService } from './products.service';
-
-import { ProductEntity } from 'src/entities/product.entity';
-import { ProductTypeEntity } from 'src/entities/productType.entity';
+import { ProductEntity } from './../entities//product.entity';
+import { ProductTypeEntity } from './../entities/productType.entity';
+import { CreateProductDto } from './dto/create-product.dto';
+import { CreateProductTypeDto } from './dto/create-productType.dto';
 
 @Controller()
 export class ProductsController {
-    
     constructor(private readonly productsService: ProductsService) {}
-  
-    //EJERCICIO 1
-    @Post("/products") //crear un objeto con @post
-    async createProduct(@Body() product: ProductEntity): Promise<ProductEntity> {
-        return await this.productsService.createProduct(product);
+
+    @Post('products')
+    async createProduct(@Body() productDto: CreateProductDto): Promise<ProductEntity> {
+        return await this.productsService.createProduct(productDto);
     }
 
-    //EJERCICIO 2
-    @Post("/products-type")
-    async createProductType(productType: ProductTypeEntity): Promise<ProductTypeEntity> {
-        return await this.productsService.createProductType(productType);
+    @Get('products')
+    async findAllProducts(): Promise<ProductEntity[]> {
+        return await this.productsService.findAllProducts();
     }
 
-
-    @Get("/getProducts")
-    async findAll() {
-        return await this.productsService.findAll();
+    @Get('products/:id')
+    async findProductById(@Param('id') id: string): Promise<ProductEntity> {
+        return await this.productsService.findProductById(id);
     }
- 
 
+    @Put('products/:id')
+    async updateProduct(@Param('id') id: string, @Body() productDto: CreateProductDto): Promise<ProductEntity> {
+        return await this.productsService.updateProduct(id, productDto);
+    }
 
+    @Delete(':id')
+    async deleteProduct(@Param('id') id: string): Promise<void> {
+        return await this.productsService.deleteProduct(id);
+    }
 
-    
+    @Post('products-type')
+    async createProductType(@Body() productTypeDto: CreateProductTypeDto): Promise<ProductTypeEntity> {
+        return await this.productsService.createProductType(productTypeDto);
+    }
 
+    @Get('products-type')
+    async findAllProductTypes(): Promise<ProductTypeEntity[]> {
+        return await this.productsService.findAllProductTypes();
+    }
+
+    @Get('products-type/:id')
+    async findProductTypeById(@Param('id') id: string): Promise<ProductTypeEntity> {
+        return await this.productsService.findProductTypeById(id);
+    }
+
+    @Put('products-type/:id')
+    async updateProductType(@Param('id') id: string, @Body() productTypeDto: CreateProductTypeDto): Promise<ProductTypeEntity> {
+        return await this.productsService.updateProductType(id, productTypeDto);
+    }
+
+    @Delete('types/:id')
+    async deleteProductType(@Param('id') id: string): Promise<void> {
+        return await this.productsService.deleteProductType(id);
+    }
 }

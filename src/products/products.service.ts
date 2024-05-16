@@ -1,65 +1,64 @@
 import { Injectable } from '@nestjs/common';
-import { HttpException } from '@nestjs/common';
-
-import { ProductEntity } from 'src/entities/product.entity';
-import { ProductTypeEntity } from 'src/entities/productType.entity';
-
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { ProductEntity } from './../entities/product.entity';
+import { ProductTypeEntity } from './../entities/productType.entity';
+import { CreateProductDto } from './dto/create-product.dto';
+import { CreateProductTypeDto } from './dto/create-productType.dto';
+import { json } from 'stream/consumers';
 @Injectable()
 export class ProductsService {
+    constructor(
+        @InjectRepository(ProductEntity)
+        private readonly productRepository: Repository<ProductEntity>,
+        @InjectRepository(ProductTypeEntity)
+        private readonly productTypeRepository: Repository<ProductTypeEntity>,
+    ) {}
 
-    //ACCESO A LAS TABLAS
-    repositoryProductEntity = ProductEntity
-    repositoryProductTypeEntity = ProductTypeEntity
-
-    //EJERCICIO 1 - Crear products con post
-    async createProduct(product: ProductEntity): Promise<ProductEntity> {
-        try {
-            //Podemos utilizar save porque la entidad ProductEntity
-            //extiende a BaseEntity
-            //Usamos await para esperar la ejecución del save
-            return await this.repositoryProductEntity.save(product)
-
-        } catch {
-            throw new HttpException("Solicitud incorrecta - Error creando producto", 400)
-        } finally {
-            console.log("Terminó la ejecución, product")
-        }
+    async createProduct(productDto: CreateProductDto): Promise<ProductEntity> {
+        const product = this.productRepository.create(productDto);
+        return await this.productRepository.save(product);
     }
 
-    //EJERCICIO 2 - Crear productTypes con post
-    async createProductType(productType: ProductTypeEntity): Promise<ProductTypeEntity> {
-        try {
-            return await this.repositoryProductTypeEntity.save(productType)
-        } catch {
-            throw new HttpException("Solicitud incorrecta - Error creando producto", 400)
-        } finally {
-            console.log("Terminó la ejecución productType")
-        }
+    async findAllProducts(): Promise<ProductEntity[]> {
+        return await this.productRepository.find();
+    }
+
+    async findProductById(id: string): Promise<ProductEntity> {
+        const products = await this.productRepository.find({ where: { id } });
+        return products[0]; // Return the first element of the array
     }
     
-    /*
-    //Copilot sugiere que pedís solo el nombre de parámetro y después creás vos la entidad
-    async createProductType(name: string): Promise<ProductTypeEntity> {
-        try {
-            const newProductType = new ProductTypeEntity();
-            newProductType.name = name;
-            return await this.repositoryProductTypeEntity.save(newProductType);
-        } catch {
-            throw new HttpException("Solicitud incorrecta - Error creando producto", 400)
-        } finally {
-            console.log("Terminó la ejecución productType")
-        }
-    }
-    */
 
-    //Función para el GET, findall
-    async findAll(){
-        try {
-          return await this.repositoryProductEntity.find(); // Devuelve todos los productos
-        } catch (error) {
-          throw new HttpException('Error finding products', 500);
-        }
-      }
-    
-        
+    async updateProduct(id: string, productDto: CreateProductDto): Promise<ProductEntity> {
+        await this.productRepository.update(id, productDto);
+        return await this.productRepository.find({ where: { id } })[0];
+    }
+
+    async deleteProduct(id: string): Promise<void> {
+        await this.productRepository.delete(id);
+    }
+
+    async createProductType(productTypeDto: CreateProductTypeDto): Promise<ProductTypeEntity> {
+        const productType = this.productTypeRepository.create(productTypeDto);
+        return await this.productTypeRepository.save(productType);
+    }
+
+    async findAllProductTypes(): Promise<ProductTypeEntity[]> {
+        return await this.productTypeRepository.find();
+    }
+
+    async findProductTypeById(id: string): Promise<ProductTypeEntity> {
+        const productType = await this.productTypeRepository.find({where:{id}});
+        return productType[0];
+    }
+
+    async updateProductType(id: string, productTypeDto: CreateProductTypeDto): Promise<ProductTypeEntity> {
+        await this.productTypeRepository.update(id, productTypeDto);
+        return await this.productTypeRepository.find({where:{id}})[0];
+    }
+
+    async deleteProductType(id: string): Promise<void> {
+        await this.productTypeRepository.delete(id);
+    }
 }
