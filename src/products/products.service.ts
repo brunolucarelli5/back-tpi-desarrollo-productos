@@ -5,8 +5,8 @@ import { ProductEntity } from '../entities/product.entity';
 import { ProductTypeEntity } from './../entities/productType.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import { CreateProductTypeDto } from './dto/create-productType.dto';
-
 import { HttpException } from '@nestjs/common';
+
 @Injectable()
 export class ProductsService {
   constructor(
