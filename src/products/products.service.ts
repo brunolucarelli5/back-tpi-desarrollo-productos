@@ -5,8 +5,8 @@ import { ProductEntity } from './../entities/product.entity';
 import { ProductTypeEntity } from './../entities/productType.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import { CreateProductTypeDto } from './dto/create-productType.dto';
-
 import { HttpException } from '@nestjs/common';
+
 @Injectable()
 export class ProductsService {
     constructor(
@@ -17,38 +17,53 @@ export class ProductsService {
     ) {}
     
     async createProduct(productDto: CreateProductDto): Promise<ProductEntity> {
-        const product = this.productRepository.create(productDto);
-        return await this.productRepository.save(product);
-    }
-
-    async findAllProducts(): Promise<ProductEntity[]> {
-        return await this.productRepository.find();
-    }
-
-    async findProductById(id: string): Promise<ProductEntity> {
-        const products = await this.productRepository.find({ where: { id } });
-        return products[0]; 
-    } 
-
-    async updateProduct(id: string, productDto: CreateProductDto): Promise<ProductEntity> {
-        await this.productRepository.update(id, productDto);
-        return await this.productRepository.findOne({where:{id}});
-    }
-
-    async deleteProduct(id: string): Promise<void> {
-        await this.productRepository.delete(id);
-    }
-
-    async createProductType(productTypeDto: CreateProductTypeDto): Promise<ProductTypeEntity> {
         try {
-            const productType = this.productTypeRepository.create(productTypeDto);
-            return await this.productTypeRepository.save(productType);
-
+            const product = this.productRepository.create(productDto);
+            return await this.productRepository.save(product);
         } catch (error) {
-            throw new HttpException('Error creando producto', 400);
+            throw new HttpException(error.message??'Error creando producto', 401);
         }
     }
 
+    async findAllProducts(): Promise<ProductEntity[]> {
+        try {
+        return await this.productRepository.find({relations:["productType"]});
+        } catch (error) {
+            throw new HttpException(error.message??'Error No encontrados', 404);
+        }
+    }
+
+    async findProductById(id: string): Promise<ProductEntity> {
+        try { 
+            const products = await this.productRepository.find({ where: { id } });
+            return products[0]; 
+        } catch (error) {
+            throw new HttpException(error.message??'Error No encontrado', 404);
+        }
+    } 
+
+    async updateProduct(id: string, productDto: CreateProductDto): Promise<ProductEntity> {
+        try {
+            await this.productRepository.update(id, productDto);
+            return await this.productRepository.findOne({where:{id}});
+        } catch (error) {
+            throw new HttpException(error.message??'Error No encontrado',404);
+        }
+    }
+
+    async deleteProduct(id: string): Promise<void> {
+        try {
+            await this.productRepository.delete(id);
+        } catch (error) {
+            throw new HttpException(error.message??'Error No encontrado', 404);
+        }
+    }
+
+    async createProductType(productTypeDto: CreateProductTypeDto): Promise<ProductTypeEntity> {
+        const productType = this.productTypeRepository.create(productTypeDto);
+        return await this.productTypeRepository.save(productType);
+    }
+    
     async findAllProductTypes(): Promise<ProductTypeEntity[]> {
         return await this.productTypeRepository.find();
     }
@@ -64,14 +79,5 @@ export class ProductsService {
 
     async deleteProductType(id: string): Promise<void> {
         await this.productTypeRepository.delete(id);
-    }
-
-
-    async findAll(){
-        try {
-          return await this.productTypeRepository.find(); // Devuelve todos los productos
-        } catch (error) {
-          throw new HttpException(error.message??'Error finding products', 500);
-        }
     }
 }
