@@ -6,8 +6,8 @@ import { ProductEntity } from 'src/entities/product.entity';
 import { ProductTypeEntity } from 'src/entities/productType.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ProductEntity, ProductTypeEntity]),],
+  imports: [TypeOrmModule.forFeature([ProductEntity, ProductTypeEntity])],
   controllers: [ProductsController],
-  providers: [ProductsService]
+  providers: [ProductsService],
 })
 export class ProductsModule {}
