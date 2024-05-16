@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Put, Delete, Param, Body } from '@nestjs/common';
+import { Controller, Get, Post, Put, Delete, Param, Body, HttpCode, HttpStatus } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { ProductEntity } from './../entities//product.entity';
 import { ProductTypeEntity } from './../entities/productType.entity';
@@ -60,6 +60,7 @@ export class ProductsController {
     }
 
     @Get("/getProducts")
+    @HttpCode(HttpStatus.OK)
     async findAll() {
         return await this.productsService.findAll();
     }
