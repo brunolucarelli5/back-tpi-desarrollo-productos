@@ -20,24 +20,27 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Post('products')
+  @HttpCode(HttpStatus.CREATED)
   async createProduct(
     @Body() productDto: CreateProductDto,
   ): Promise<ProductEntity> {
-    console.log(productDto);
     return await this.productsService.createProduct(productDto);
   }
 
   @Get('products')
+  @HttpCode(HttpStatus.OK)
   async findAllProducts(): Promise<ProductEntity[]> {
     return await this.productsService.findAllProducts();
   }
 
   @Get('products/:id')
+  @HttpCode(HttpStatus.OK)
   async findProductById(@Param('id') id: string): Promise<ProductEntity> {
     return await this.productsService.findProductById(id);
   }
 
   @Put('products/:id')
+  @HttpCode(HttpStatus.OK)
   async updateProduct(
     @Param('id') id: string,
     @Body() productDto: CreateProductDto,
@@ -46,6 +49,7 @@ export class ProductsController {
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.OK)
   async deleteProduct(@Param('id') id: string): Promise<void> {
     return await this.productsService.deleteProduct(id);
   }
@@ -82,6 +86,7 @@ export class ProductsController {
   }
 
   @Delete('products-types/:id')
+  @HttpCode(HttpStatus.OK)
   async deleteProductType(@Param('id') id: string): Promise<void> {
     return await this.productsService.deleteProductType(id);
   }
