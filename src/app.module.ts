@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { ProductsModule } from './products/products.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { entities } from './entities';
+import { SeedsService } from './seeds/seeds.service';
 
 @Module({
   imports: [ProductsModule, TypeOrmModule.forRoot({
@@ -15,6 +16,6 @@ import { entities } from './entities';
     synchronize: true, //busca cambios en la DB cada que prendamos la app
   })],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, SeedsService],
 })
 export class AppModule {}

@@ -8,12 +8,14 @@ import {
   Body,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { ProductEntity } from '../entities/product.entity';
-import { ProductTypeEntity } from './../entities/productType.entity';
+import { ProductTypeEntity } from '../entities/productType.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import { CreateProductTypeDto } from './dto/create-productType.dto';
+import { AuthGuard } from 'src/middlewares/auth.middleware';
 
 @Controller()
 export class ProductsController {
@@ -27,6 +29,7 @@ export class ProductsController {
     return await this.productsService.createProduct(productDto);
   }
 
+  @UseGuards(new AuthGuard('ver-productos'))
   @Get('products')
   @HttpCode(HttpStatus.OK)
   async findAllProducts(): Promise<ProductEntity[]> {

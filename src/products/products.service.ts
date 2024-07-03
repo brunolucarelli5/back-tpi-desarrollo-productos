@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ProductEntity } from '../entities/product.entity';
-import { ProductTypeEntity } from './../entities/productType.entity';
+import { ProductTypeEntity } from '../entities/productType.entity';
 import { CreateProductDto } from './dto/create-product.dto';
 import { CreateProductTypeDto } from './dto/create-productType.dto';
 import { HttpException } from '@nestjs/common';
@@ -17,7 +17,10 @@ export class ProductsService {
   ) {}
 
   async createProduct(productDto: CreateProductDto): Promise<ProductEntity> {
-    return await this.productRepository.save(productDto);
+    try { return await this.productRepository.save(productDto);
+    }catch{
+      throw new HttpException('Error creando producto', 400);
+    }
   }
 
   async findAllProducts(): Promise<ProductEntity[]> {
@@ -25,7 +28,7 @@ export class ProductsService {
   }
 
   async findProductById(id: string): Promise<ProductEntity> {
-    const products = await this.productRepository.find({ where: { id } });
+    const products = await this.productRepository.find({ where: { id }, relations: ['productType'] });
     return products[0];
   }
 
@@ -59,7 +62,7 @@ export class ProductsService {
       throw new HttpException(
         error.message ?? 'Error finding product types',
         404,
-      ); // 404: Not Found
+      );
     }
   }
 

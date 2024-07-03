@@ -10,7 +10,14 @@ async function bootstrap() {
       transform: true
     }),
   );
-  
-  await app.listen(3000);
+
+  // Enable CORS
+  app.enableCors({
+    origin: 'http://localhost:4200', // Replace with your frontend URL
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    allowedHeaders: 'Content-Type, Authorization',
+  });
+
+  await app.listen(2999);
 }
 bootstrap();
