@@ -4,18 +4,25 @@ import { AppService } from './app.service';
 import { ProductsModule } from './products/products.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { entities } from './entities';
-import { SeedsService } from './seeds/seeds.service';
+import { ProductEntity } from './entities/product.entity';
+import { ProductTypeEntity } from './entities/productType.entity';
 
 @Module({
-  imports: [ProductsModule, TypeOrmModule.forRoot({
-    //Usamos forRoot porque estamos inicializando la base de datos.
-    //Como es SQLITE es este formato, si fuera postgres sería otro
-    type: 'sqlite',
-    database: 'ProductsRepository.db',
-    entities: entities,
-    synchronize: true, //busca cambios en la DB cada que prendamos la app
-  })],
+  imports: [
+    ProductsModule,
+    TypeOrmModule.forRoot({
+      //Usamos forRoot porque estamos inicializando la base de datos.
+      type: 'postgres',
+      host: 'localhost',
+      port: 5432,
+      username: 'prueba',
+      password: 'prueba',
+      database: 'productosdesarrollo',
+      synchronize: true,
+      entities: [ProductEntity, ProductTypeEntity],
+    }),
+  ],
   controllers: [AppController],
-  providers: [AppService, SeedsService],
+  providers: [AppService],
 })
 export class AppModule {}

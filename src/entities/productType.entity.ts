@@ -1,7 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, Not } from 'typeorm';
 import { ProductEntity } from './product.entity';
 
-@Entity()
+@Entity({ name: 'product_types'})
 export class ProductTypeEntity {
   @PrimaryGeneratedColumn()
   id: string;
