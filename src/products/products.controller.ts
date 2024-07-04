@@ -21,6 +21,7 @@ import { AuthGuard } from 'src/middlewares/auth.middleware';
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
+  @UseGuards(new AuthGuard('crear-productos'))
   @Post('products')
   @HttpCode(HttpStatus.CREATED)
   async createProduct(
@@ -42,6 +43,7 @@ export class ProductsController {
     return await this.productsService.findProductById(id);
   }
 
+  @UseGuards(new AuthGuard('editar-productos'))
   @Put('products/:id')
   @HttpCode(HttpStatus.OK)
   async updateProduct(
